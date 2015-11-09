@@ -6,7 +6,7 @@ from os.path import dirname, basename
 
 
 class Keygen():
-    """Key generator"""
+    """OpenVPN key generator"""
 
     def __init__(self, vars_file):
         """Sets the easy-rsa vars file"""
@@ -21,7 +21,8 @@ class Keygen():
         """Generates a new key"""
         basedir = dirname(self.vars_file)
         vars_ = basename(self.vars_file)
-        cmd = 'cd {basedir}; source {vars}; build-key --batch {name}'.format(
+        cmd = ('cd {basedir}; source {vars}; '
+               'build-key --batch {name}').format(
             basedir=basedir, vars=vars_, name=name)
         cp = run(cmd)
         try:
