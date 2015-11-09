@@ -40,6 +40,7 @@ class ClientPackager():
                         arcname=self.CA_FILE)
                 with NamedTemporaryFile(mode='w+') as cfg:
                     cfg.write(config)
+                    cfg.seek(0)
                     tar.add(cfg.name, arcname=self.CONFIG_FILE)
             tmp.seek(0)
             return tmp.read()
