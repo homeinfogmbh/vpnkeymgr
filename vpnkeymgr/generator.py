@@ -19,8 +19,8 @@ class Keygen():
         """Generates a new key"""
         name = str(uuid4()) if name is None else name
         basedir = dirname(self._vars_file)
-        cmd = ('cd {cwd}; cd {basedir}; source {vars}; '
-               'build-key --batch {name}').format(
+        cmd = ('cd {cwd}; source {vars}; '
+               './build-key --batch {name}').format(
             cwd=getcwd(), basedir=basedir,
             vars=self._vars_file, name=name)
         cp = run(cmd, shell=True)
