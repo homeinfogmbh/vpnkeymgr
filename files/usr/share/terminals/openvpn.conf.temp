@@ -91,9 +91,9 @@ persist-tun
 # a separate .crt/.key file pair
 # for each client.  A single ca
 # file can be used for all clients.
-ca {ca}
-cert {cert}
-key {key}
+ca ca.crt
+cert {crtfile}.crt
+key {keyfile}.key
 
 # Verify server certificate by checking
 # that the certicate has the nsCertType
@@ -114,8 +114,8 @@ ns-cert-type server
 # Select a cryptographic cipher.
 # If the cipher option is used on the server
 # then you must also specify it here.
-cipher {cipher}
-auth {auth}
+cipher CAMELLIA-256-CBC
+auth SHA-512
 
 # Enable compression on the VPN link.
 # Don't enable this unless it is also
