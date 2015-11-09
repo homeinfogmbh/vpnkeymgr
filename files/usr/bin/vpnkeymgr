@@ -21,7 +21,7 @@ if __name__ == '__main__':
     if options['generate']:
         vars_ = options['<vars>']
         basedir = options['--basedir'] or getcwd()
-        keygen = Keygen(vars_)
+        keygen = Keygen(basedir, vars_)
         key = keygen(name=name)
         if key:
             print('Generated key:', key)
