@@ -22,7 +22,7 @@ class Keygen():
         cmd = ('cd {basedir}; source {vars}; '
                'build-key --batch {name}').format(
             basedir=basedir, vars=vars_, name=name)
-        cp = run(cmd)
+        cp = run(cmd, shell=True)
         try:
             cp.check_returncode()
         except CalledProcessError:
