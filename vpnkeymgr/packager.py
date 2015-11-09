@@ -30,7 +30,7 @@ class ClientPackager():
         with open(self.CFG_TEMP, 'r') as cfg_tempf:
             cfg_temp = cfg_tempf.read()
         # Render configuration template
-        config = cfg_temp.fomat(crtfile=crtfile, keyfile=keyfile)
+        config = cfg_temp.format(crtfile=crtfile, keyfile=keyfile)
         # Add files to temporary archive
         with TemporaryFile(mode='w+b') as tmp:
             with tarfile.open(mode='w', fileobj=tmp) as tar:
