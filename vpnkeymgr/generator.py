@@ -2,7 +2,6 @@
 
 from uuid import uuid4
 from subprocess import run, CalledProcessError
-from os import getcwd
 from os.path import dirname
 
 __all__ = ['Keygen']
@@ -11,17 +10,18 @@ __all__ = ['Keygen']
 class Keygen():
     """OpenVPN key generator"""
 
-    def __init__(self, vars_file):
+    def __init__(self, basedir, vars_file):
         """Sets the easy-rsa vars file"""
+        self._basedir = basedir
         self._vars_file = vars_file
 
     def __call__(self, name=None):
         """Generates a new key"""
         name = str(uuid4()) if name is None else name
         basedir = dirname(self._vars_file)
-        cmd = ('cd {cwd}; source {vars}; '
+        cmd = ('cd {basedir}; source {vars}; '
                './build-key --batch {name}').format(
-            cwd=getcwd(), basedir=basedir,
+            basedir=self._basedir, basedir=basedir,
             vars=self._vars_file, name=name)
         cp = run(cmd, shell=True)
         try:

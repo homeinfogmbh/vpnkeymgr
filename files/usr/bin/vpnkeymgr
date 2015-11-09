@@ -2,13 +2,14 @@
 """OpenVPN key management utility
 
 Usage:
-    vpnkeymgr generate <vars> [<name>]
+    vpnkeymgr generate <vars> [<name>] [--basedir=<basedir>]
     vpnkeymgr package <basedir> <name>
 """
 
 from tempfile import NamedTemporaryFile
 from docopt import docopt
 from sys import stderr
+from os import getcwd
 
 from vpnkeymgr.generator import Keygen
 from vpnkeymgr.packager import ClientPackager
@@ -19,6 +20,7 @@ if __name__ == '__main__':
     name = options['<name>']
     if options['generate']:
         vars_ = options['<vars>']
+        basedir = options['--basedir'] or getcwd()
         keygen = Keygen(vars_)
         key = keygen(name=name)
         if key:
