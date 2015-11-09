@@ -2,8 +2,8 @@
 """OpenVPN key management utility
 
 Usage:
-    keymgr generate <vars> [<name>]
-    keymgr package <basedir> <name>
+    vpnkeymgr generate <vars> [<name>]
+    vpnkeymgr package <basedir> <name>
 """
 
 from tempfile import NamedTemporaryFile
