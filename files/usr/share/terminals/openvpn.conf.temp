@@ -94,8 +94,8 @@ persist-tun
 # for each client.  A single ca
 # file can be used for all clients.
 ca ca.crt
-cert {crtfile}.crt
-key {keyfile}.key
+cert {crtfile}
+key {keyfile}
 
 # Verify server certificate by checking
 # that the certicate has the nsCertType
