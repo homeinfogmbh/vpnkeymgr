@@ -6,8 +6,10 @@ from os.path import join
 
 import tarfile
 
+__all__ = ['ClientPackager']
 
-class ClientKeyPackager():
+
+class ClientPackager():
     """Packs client keys"""
 
     KEYFILE = '{0}.key'

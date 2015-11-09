@@ -1,0 +1,45 @@
+#! /usr/bin/env python3
+"""OpenVPN key management utility
+
+Usage:
+    keymgr generate <vars> [<name>]
+    keymgr package <basedir> <name>
+"""
+
+from tempfile import NamedTemporaryFile
+from docopt import docopt
+from sys import stderr
+
+from vpnkeymgr.generator import Keygen
+from vpnkeymgr.packager import ClientPackager
+
+
+if __name__ == '__main__':
+    options = docopt(__doc__)
+    name = options['<name>']
+    if options['generate']:
+        vars_ = options['<vars>']
+        keygen = Keygen(vars_)
+        key = keygen(name=name)
+        if key:
+            print('Generated key:', key)
+            exit(0)
+        else:
+            print('Failed to generate key', file=stderr)
+            exit(1)
+    elif options['package']:
+        basedir = options['<basedir>']
+        packager = ClientPackager(basedir)
+        tarball = packager(name)
+        if tarball:
+            with NamedTemporaryFile(
+                    mode='wb', suffix='.tar', delete=False) as tmp:
+                tmp.write(tarball)
+            print('Wrote tarball to:', tmp.name)
+            exit(0)
+        else:
+            print('Could not create tarball', file=stderr)
+            exit(2)
+    else:
+        print('W00t teh shizzle?', file=stderr)
+        exit(3)

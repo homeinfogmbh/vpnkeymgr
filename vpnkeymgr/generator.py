@@ -4,6 +4,8 @@ from uuid import uuid4
 from subprocess import run, CalledProcessError
 from os.path import dirname, basename
 
+__all__ = ['Keygen']
+
 
 class Keygen():
     """OpenVPN key generator"""
@@ -12,16 +14,11 @@ class Keygen():
         """Sets the easy-rsa vars file"""
         self._vars_file = vars_file
 
-    @property
-    def vars_file(self):
-        """Returns the easy-rsa vars file"""
-        return self._vars_file
-
-    def genkey(self, name=None):
+    def __call__(self, name=None):
         """Generates a new key"""
         name = str(uuid4()) if name is None else name
-        basedir = dirname(self.vars_file)
-        vars_ = basename(self.vars_file)
+        basedir = dirname(self._vars_file)
+        vars_ = basename(self._vars_file)
         cmd = ('cd {basedir}; source {vars}; '
                'build-key --batch {name}').format(
             basedir=basedir, vars=vars_, name=name)
@@ -31,12 +28,16 @@ class Keygen():
         except CalledProcessError:
             return False
         else:
-            return True
+            return name
+
+    def __str__(self):
+        """Returns the path to the vars file"""
+        return self._vars
 
     def genkeys(self, count):
         """Generates multiple keys"""
         result = True
         for _ in range(0, count):
-            reply = self.genkey()
+            reply = self()
             result = reply and result
         return result
