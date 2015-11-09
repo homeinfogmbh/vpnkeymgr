@@ -17,8 +17,9 @@ class Keygen():
         """Returns the easy-rsa vars file"""
         return self._vars_file
 
-    def genkey(self, name):
+    def genkey(self, name=None):
         """Generates a new key"""
+        name = str(uuid4()) if name is None else name
         basedir = dirname(self.vars_file)
         vars_ = basename(self.vars_file)
         cmd = ('cd {basedir}; source {vars}; '
@@ -36,7 +37,6 @@ class Keygen():
         """Generates multiple keys"""
         result = True
         for _ in range(0, count):
-            name = str(uuid4())
-            reply = self.genkey(name)
+            reply = self.genkey()
             result = reply and result
         return result
