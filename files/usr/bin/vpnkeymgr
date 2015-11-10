@@ -67,4 +67,4 @@ if __name__ == '__main__':
             exit(3)
     else:
         print('W00t teh shizzle?', file=stderr)
-        exit(3)
+        exit(4)
