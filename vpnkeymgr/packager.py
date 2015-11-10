@@ -1,8 +1,7 @@
 """OpenVPN key packager"""
 
 from tempfile import TemporaryFile, NamedTemporaryFile
-from os import getcwd
-from os.path import join
+from os.path import join, basename
 
 import tarfile
 
@@ -18,14 +17,18 @@ class ClientPackager():
     CONFIG_FILE = 'terminals.conf'
     CFG_TEMP = '/usr/share/terminals/openvpn.conf.temp'
 
-    def __init__(self, basedir=None):
+    def __init__(self, basedir):
         """Sets the base directory"""
-        self._basedir = basedir or getcwd()
+        self._basedir = basedir
 
     def __call__(self, client):
         """Packages the files for the specified client"""
         keyfile = self.KEYFILE.format(client)
         crtfile = self.CRTFILE.format(client)
+        if basename(self._basedir) == 'keys':
+            keysdir = self._basedir
+        else:
+            keysdir = join(self._basedir, 'keys')
         # Read configuration template
         with open(self.CFG_TEMP, 'r') as cfg_tempf:
             cfg_temp = cfg_tempf.read()
@@ -34,9 +37,9 @@ class ClientPackager():
         # Add files to temporary archive
         with TemporaryFile(mode='w+b') as tmp:
             with tarfile.open(mode='w', fileobj=tmp) as tar:
-                tar.add(join(self._basedir, keyfile), arcname=keyfile)
-                tar.add(join(self._basedir, crtfile), arcname=crtfile)
-                tar.add(join(self._basedir, self.CA_FILE),
+                tar.add(join(keysdir, keyfile), arcname=keyfile)
+                tar.add(join(keysdir, crtfile), arcname=crtfile)
+                tar.add(join(keysdir, self.CA_FILE),
                         arcname=self.CA_FILE)
                 with NamedTemporaryFile(mode='w+') as cfg:
                     cfg.write(config)

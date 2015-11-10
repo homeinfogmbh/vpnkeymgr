@@ -2,8 +2,13 @@
 """OpenVPN key management utility
 
 Usage:
-    vpnkeymgr generate <vars> [<name>] [--basedir=<basedir>]
-    vpnkeymgr package <basedir> <name>
+    vpnkeymgr generate <vars> [--name=<name>] [options]
+    vpnkeymgr package <name> [--out=<file>] [options]
+    vpnkeymgr syncpkg <name>... [--host=<host>] [--path=<path>] \
+[--user=<user>] [--identity=<identity>] [options]
+
+Options:
+    --basedir=<basedir>  Specifies the base directory to use
 """
 
 from tempfile import NamedTemporaryFile
@@ -13,14 +18,15 @@ from os import getcwd
 
 from vpnkeymgr.generator import Keygen
 from vpnkeymgr.packager import ClientPackager
+from vpnkeymgr.syncer import Syncer
 
 
 if __name__ == '__main__':
     options = docopt(__doc__)
-    name = options['<name>']
+    basedir = options['--basedir'] or getcwd()
     if options['generate']:
         vars_ = options['<vars>']
-        basedir = options['--basedir'] or getcwd()
+        name = options['--name']
         keygen = Keygen(basedir, vars_)
         key = keygen(name=name)
         if key:
@@ -30,18 +36,35 @@ if __name__ == '__main__':
             print('Failed to generate key', file=stderr)
             exit(1)
     elif options['package']:
-        basedir = options['<basedir>']
+        name = options['<name>']
+        fname = options['--out']
         packager = ClientPackager(basedir)
         tarball = packager(name)
         if tarball:
-            with NamedTemporaryFile(
-                    mode='wb', suffix='.tar', delete=False) as tmp:
-                tmp.write(tarball)
-            print('Wrote tarball to:', tmp.name)
+            if fname:
+                with open(fname, 'wb') as f:
+                    f.write(tarball)
+            else:
+                with NamedTemporaryFile(
+                        mode='wb', suffix='.tar', delete=False) as tmp:
+                    tmp.write(tarball)
+                    fname = tmp.name
+            print('Wrote tarball to:', fname)
             exit(0)
         else:
             print('Could not create tarball', file=stderr)
             exit(2)
+    elif options['syncpkg']:
+        clients = options['<name>']
+        host = options['--host']
+        path = options['--path']
+        user = options['--user']
+        identity = options['--identity']
+        syncer = Syncer(basedir, *clients)
+        if syncer(host=host, path=path, user=user, identity=identity):
+            exit(0)
+        else:
+            exit(3)
     else:
         print('W00t teh shizzle?', file=stderr)
         exit(3)

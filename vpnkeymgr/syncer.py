@@ -1,32 +1,41 @@
 """Terminal key packages synchronizer"""
+
+from subprocess import run, CalledProcessError
 from tempfile import TemporaryDirectory
 from os.path import join
-from os import getcwd
+from sys import stderr
 
 from .packager import ClientPackager
-from subprocess import run, CalledProcessError
+
+__all__ = ['Syncer']
 
 
 class Syncer():
     """Synchronizes OpenVPN configuration packages"""
 
+    HOST = 'srv.homeinfo.de'
+    PATH = '/usr/lib/terminals/keys'
     USER = 'termgr'
     IDENTITY = '~/.ssh/termgr'
-    PATH = '/usr/lib/terminals/keys'
+    CMD = ('/usr/bin/rsync -auvce "/usr/bin/ssh -i {identity} '
+           '-o UserKnownHostsFile=/dev/null '
+           '-o StrictHostKeyChecking=no '
+           '-o ConnectTimeout=5" '
+           '{arcname} {user}@{host}:{fname}')
 
-    def __init__(self, *clients, basedir=None):
+    def __init__(self, basedir, *clients):
         """Sets desired clients and an optional basedir"""
+        self._basedir = basedir
         self._clients = clients
-        self._basedir = basedir or getcwd()
 
-    def __call__(self, host, path=None, user=None, identity=None):
+    def __call__(self, host=None, path=None, user=None, identity=None):
         """Synchronizes the respective files to the specified destination
         with an optional alternative user and identity file
         """
+        host = host or self.HOST
         path = path or self.PATH
         user = user or self.USER
         identity = identity or self.IDENTITY
-        cmd_temp = '/usr/bin/rsync -auvc {arcname} {host}:{fname}'
         failures = []
         with TemporaryDirectory() as tmpdir:
             for client in self._clients:
@@ -36,14 +45,16 @@ class Syncer():
                 packager = ClientPackager(self._basedir)
                 with open(arcname, 'wb') as tar:
                     tar.write(packager(client))
-                cmd = cmd_temp.format(arcname=arcname, host=host, fname=fname)
+                cmd = self.CMD.format(
+                    identity=identity, arcname=arcname,
+                    user=user, host=host, fname=fname)
                 completed_process = run(cmd, shell=True)
                 try:
                     completed_process.check_returncode()
                 except CalledProcessError:
                     failures.append(client)
         if failures:
-            print('Could not synchronize:', failures)
+            print('Could not synchronize:', failures, file=stderr)
             return False
         else:
             return True
