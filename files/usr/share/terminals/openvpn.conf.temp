@@ -117,7 +117,7 @@ ns-cert-type server
 # If the cipher option is used on the server
 # then you must also specify it here.
 cipher CAMELLIA-256-CBC
-auth SHA-512
+auth SHA512
 
 # Enable compression on the VPN link.
 # Don't enable this unless it is also
