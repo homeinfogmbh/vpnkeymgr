@@ -16,7 +16,7 @@ class Syncer():
     HOST = 'srv.homeinfo.de'
     PATH = '/usr/lib/terminals/keys'
     USER = 'termgr'
-    RSH = '-e "/usr/bin/ssh -i {identity}'
+    RSH = '-e "/usr/bin/ssh -i {identity}"'
     CMD = (
         '/usr/bin/rsync -auvc {rsh} '
         '-o UserKnownHostsFile=/dev/null '
