@@ -21,7 +21,7 @@ class Syncer():
         '/usr/bin/rsync -auvc {rsh} '
         '-o UserKnownHostsFile=/dev/null '
         '-o StrictHostKeyChecking=no '
-        '-o ConnectTimeout=5" '
+        '-o ConnectTimeout=5 '
         '--chmod=F640 '
         '{files} {user}@{host}:{path}'
     )
