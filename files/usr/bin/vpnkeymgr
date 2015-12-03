@@ -46,7 +46,8 @@ if __name__ == '__main__':
                     f.write(tarball)
             else:
                 with NamedTemporaryFile(
-                        mode='wb', suffix='.tar', delete=False) as tmp:
+                        mode='wb', suffix='.tar', delete=False
+                ) as tmp:
                     tmp.write(tarball)
                     fname = tmp.name
             print('Wrote tarball to:', fname)
