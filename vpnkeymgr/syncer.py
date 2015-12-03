@@ -16,12 +16,12 @@ class Syncer():
     HOST = 'srv.homeinfo.de'
     PATH = '/usr/lib/terminals/keys'
     USER = 'termgr'
-    RSH = '-e "/usr/bin/ssh -i {identity}"'
+    IDENTITY = '-i {identity}'
     CMD = (
-        '/usr/bin/rsync -auvc {rsh} '
+        '/usr/bin/rsync -auvce "/usr/bin/ssh {identity} '
         '-o UserKnownHostsFile=/dev/null '
         '-o StrictHostKeyChecking=no '
-        '-o ConnectTimeout=5 '
+        '-o ConnectTimeout=5" '
         '--chmod=F640 '
         '{files} {user}@{host}:{path}'
     )
@@ -38,7 +38,7 @@ class Syncer():
         host = host or self.HOST
         path = path or self.PATH
         user = user or self.USER
-        rsh = self.RSH.format(identity) if identity else ''
+        identity = self.IDENTITY.format(identity) if identity else ''
         files = []
         failures = []
         with TemporaryDirectory() as tmpdir:
@@ -51,7 +51,8 @@ class Syncer():
                     tar.write(packager(client))
             files_ = ' '.join(files)
             cmd = self.CMD.format(
-                rsh=rsh, files=files_, user=user, host=host, path=path
+                identity=identity, files=files_,
+                user=user, host=host, path=path
             )
             completed_process = run(cmd, shell=True)
             try:
