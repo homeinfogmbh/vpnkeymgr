@@ -16,13 +16,15 @@ class Syncer():
     HOST = 'srv.homeinfo.de'
     PATH = '/usr/lib/terminals/keys'
     USER = 'termgr'
-    IDENTITY = '~/.ssh/termgr'
-    CMD = ('/usr/bin/rsync -auvce "/usr/bin/ssh -i {identity} '
-           '-o UserKnownHostsFile=/dev/null '
-           '-o StrictHostKeyChecking=no '
-           '-o ConnectTimeout=5" '
-           '--chmod=F640 '
-           '{files} {user}@{host}:{path}')
+    RSH = '-e "/usr/bin/ssh -i {identity}'
+    CMD = (
+        '/usr/bin/rsync -auvc {rsh} '
+        '-o UserKnownHostsFile=/dev/null '
+        '-o StrictHostKeyChecking=no '
+        '-o ConnectTimeout=5" '
+        '--chmod=F640 '
+        '{files} {user}@{host}:{path}'
+    )
 
     def __init__(self, basedir, *clients):
         """Sets desired clients and an optional basedir"""
@@ -36,7 +38,7 @@ class Syncer():
         host = host or self.HOST
         path = path or self.PATH
         user = user or self.USER
-        identity = identity or self.IDENTITY
+        rsh = self.RSH.format(identity) if identity else ''
         files = []
         failures = []
         with TemporaryDirectory() as tmpdir:
@@ -47,9 +49,10 @@ class Syncer():
                 packager = ClientPackager(self._basedir)
                 with open(arcname, 'wb') as tar:
                     tar.write(packager(client))
+            files_ = ' '.join(files)
             cmd = self.CMD.format(
-                identity=identity, files=' '.join(files),
-                user=user, host=host, path=path)
+                rsh=rsh, files=files_, user=user, host=host, path=path
+            )
             completed_process = run(cmd, shell=True)
             try:
                 completed_process.check_returncode()
