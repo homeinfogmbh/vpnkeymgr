@@ -4,7 +4,7 @@
 Usage:
     vpnkeymgr generate <vars> [--name=<name>] [options]
     vpnkeymgr package <name> [--out=<file>] [options]
-    vpnkeymgr syncpkg <name>... [--host=<host>] [--path=<path>] \
+    vpnkeymgr syncpkg <names>... [--host=<host>] [--path=<path>] \
 [--user=<user>] [--identity=<identity>] [options]
 
 Options:
@@ -66,7 +66,7 @@ if __name__ == '__main__':
             logger.error('Could not create tarball')
             exit(2)
     elif options['syncpkg']:
-        clients = options['<name>']
+        clients = options['<names>']
         host = options['--host']
         path = options['--path']
         user = options['--user']
