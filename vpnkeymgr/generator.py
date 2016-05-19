@@ -14,28 +14,31 @@ class Keygen():
         self._basedir = basedir
         self._vars_file = vars_file
 
-    def __call__(self, name=None):
+    def __str__(self):
+        """Returns the path to the vars file"""
+        return self._vars
+
+    def genkey(self, name=None):
         """Generates a new key"""
         name = str(uuid4()) if name is None else name
         cmd = ('cd {basedir}; source {vars}; '
                './build-key --batch {name}').format(
             basedir=self._basedir, vars=self._vars_file, name=name)
-        cp = run(cmd, shell=True)
+        completed_process = run(cmd, shell=True)
+
         try:
-            cp.check_returncode()
+            completed_process.check_returncode()
         except CalledProcessError:
             return False
         else:
             return name
 
-    def __str__(self):
-        """Returns the path to the vars file"""
-        return self._vars
-
     def genkeys(self, count):
         """Generates multiple keys"""
         result = True
+
         for _ in range(0, count):
-            reply = self()
+            reply = self.genkey()
             result = reply and result
+
         return result
