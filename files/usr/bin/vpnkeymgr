@@ -16,6 +16,7 @@ from tempfile import NamedTemporaryFile
 from docopt import docopt
 from sys import stderr
 from os import getcwd
+from os.path import basename
 
 from vpnkeymgr.generator import Keygen
 from vpnkeymgr.packager import ClientPackager
