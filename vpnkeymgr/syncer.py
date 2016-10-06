@@ -1,6 +1,5 @@
 """Terminal key packages synchronizer"""
 
-from sys import stderr
 from os.path import join
 from tempfile import TemporaryDirectory
 from subprocess import run, CalledProcessError
