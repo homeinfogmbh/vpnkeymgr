@@ -14,7 +14,6 @@ Options:
 from logging import INFO, getLogger, basicConfig
 from tempfile import NamedTemporaryFile
 from docopt import docopt
-from sys import stderr
 from os import getcwd
 from os.path import basename
 
