@@ -12,13 +12,11 @@ Options:
 """
 
 from logging import INFO, getLogger, basicConfig
-from tempfile import NamedTemporaryFile
 from docopt import docopt
 from os import getcwd
 from os.path import basename
 
 from vpnkeymgr.generator import Keygen
-from vpnkeymgr.packager import ClientPackager
 from vpnkeymgr.syncer import Syncer
 
 
@@ -41,29 +39,6 @@ if __name__ == '__main__':
         else:
             logger.error('Failed to generate key')
             exit(1)
-    elif options['package']:
-        name = options['<name>']
-        fname = options['--out']
-        packager = ClientPackager(basedir)
-        tarball = packager.package(name)
-
-        if tarball:
-            if fname:
-                with open(fname, 'wb') as f:
-                    f.write(tarball)
-            else:
-                with NamedTemporaryFile(
-                        mode='wb',
-                        suffix='.tar',
-                        delete=False) as tmp:
-                    tmp.write(tarball)
-                    fname = tmp.name
-
-            logger.info('Wrote tarball to: {}'.format(fname))
-            exit(0)
-        else:
-            logger.error('Could not create tarball')
-            exit(2)
     elif options['syncpkg']:
         clients = options['<names>']
         host = options['--host']
