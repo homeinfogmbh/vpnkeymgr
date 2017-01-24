@@ -1,4 +1,4 @@
-"""Terminal key packages synchronizer"""
+"""Terminal keys synchronizer"""
 
 from os.path import join
 from subprocess import run, CalledProcessError
@@ -7,7 +7,7 @@ __all__ = ['Syncer']
 
 
 class Syncer():
-    """Synchronizes OpenVPN configuration packages"""
+    """Synchronizes OpenVPN keys"""
 
     HOST = 'srv.homeinfo.de'
     PATH = '/usr/lib/terminals/keys'

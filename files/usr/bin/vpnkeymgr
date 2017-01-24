@@ -2,8 +2,8 @@
 """OpenVPN key management utility
 
 Usage:
-    vpnkeymgr generate <vars> [--name=<name>] [options]
-    vpnkeymgr syncpkg <names>... [--host=<host>] [--path=<path>] \
+    vpnkeymgr (gen|generate) <vars> [--name=<name>] [options]
+    vpnkeymgr sync <names>... [--host=<host>] [--path=<path>] \
 [--user=<user>] [--identity=<identity>] [options]
 
 Options:
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     options = docopt(__doc__)
     basedir = options['--basedir'] or getcwd()
 
-    if options['generate']:
+    if options['gen'] or  options['generate']:
         vars_ = options['<vars>']
         name = options['--name']
         keygen = Keygen(basedir, vars_)
@@ -38,7 +38,7 @@ if __name__ == '__main__':
         else:
             logger.error('Failed to generate key')
             exit(1)
-    elif options['syncpkg']:
+    elif options['sync']:
         clients = options['<names>']
         host = options['--host']
         path = options['--path']
