@@ -3,7 +3,6 @@
 
 Usage:
     vpnkeymgr generate <vars> [--name=<name>] [options]
-    vpnkeymgr package <name> [--out=<file>] [options]
     vpnkeymgr syncpkg <names>... [--host=<host>] [--path=<path>] \
 [--user=<user>] [--identity=<identity>] [options]
 
