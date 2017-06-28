@@ -6,5 +6,5 @@ setup(
     name='vpnkeymgr',
     requires=['docopt'],
     packages=['vpnkeymgr'],
-    data_files=[('/usr/bin', ['files/usr/bin/vpnkeymgr'])],
+    data_files=[('/usr/bin', ['files/vpnkeymgr'])],
     description=('HOMEINFO OpenVPN key manager'))
