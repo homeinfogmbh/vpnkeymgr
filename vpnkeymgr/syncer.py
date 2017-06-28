@@ -1,7 +1,7 @@
 """Terminal keys synchronizer"""
 
 from os.path import join
-from subprocess import run, CalledProcessError
+from subprocess import run
 
 __all__ = ['Syncer']
 
@@ -13,7 +13,7 @@ class Syncer():
     PATH = '/usr/lib/terminals/keys'
     USER = 'termgr'
     IDENTITY = '-i {}'
-    CMD = (
+    CMD_TEMP = (
         '/usr/bin/rsync -auvce "/usr/bin/ssh {identity} '
         '-o UserKnownHostsFile=/dev/null '
         '-o StrictHostKeyChecking=no '
@@ -48,19 +48,8 @@ class Syncer():
         host = host or self.HOST
         path = path or self.PATH
         user = user or self.USER
+        files = ' '.join(join(self.keys_dir, f) for f in self.files)
         identity = self.IDENTITY.format(identity) if identity else ''
-        cmd = self.CMD.format(
-            identity=identity,
-            files=' '.join(join(self.keys_dir, f) for f in self.files),
-            user=user,
-            host=host,
-            path=path)
-
-        completed_process = run(cmd, shell=True)
-
-        try:
-            completed_process.check_returncode()
-        except CalledProcessError:
-            return False
-        else:
-            return True
+        cmd = self.CMD_TEMP.format(
+            identity=identity, files=files, user=user, host=host, path=path)
+        run(cmd, shell=True).check_returncode()
