@@ -27,7 +27,7 @@ if __name__ == '__main__':
     options = docopt(__doc__)
     basedir = options['--basedir'] or getcwd()
 
-    if options['gen'] or  options['generate']:
+    if options['gen'] or options['generate']:
         vars_ = options['<vars>']
         name = options['--name']
         keygen = Keygen(basedir, vars_)
@@ -49,7 +49,7 @@ if __name__ == '__main__':
         syncer = Syncer(basedir, *clients)
 
         try:
-            syncer.sync(host=host, path=path, user=user, identity=identity):
+            syncer.sync(host=host, path=path, user=user, identity=identity)
         except CalledProcessError:
             exit(3)
         else:
