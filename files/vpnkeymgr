@@ -17,9 +17,7 @@ from pathlib import Path
 from subprocess import CalledProcessError
 from sys import stderr, exit as exit_
 
-from vpnkeymgr.common import print_called_process_error
-from vpnkeymgr.generator import Keygen
-from vpnkeymgr.syncer import Syncer
+from vpnkeymgr import print_called_process_error, Keygen, Syncer
 
 
 def generate(basedir, options):
@@ -68,9 +66,9 @@ def main(options):
         return generate(basedir, options)
     elif options['sync']:
         return synchronize(basedir, options)
-    else:
-        print('Unimplemented operation mode.', file=stderr)
-        return 4
+
+    print('Unimplemented operation mode.', file=stderr)
+    return 4
 
 
 if __name__ == '__main__':
