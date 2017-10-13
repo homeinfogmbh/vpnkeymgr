@@ -70,7 +70,7 @@ def main(options):
         return synchronize(basedir, options)
     else:
         print('Unimplemented operation mode.', file=stderr)
-        exit(4)
+        return 4
 
 
 if __name__ == '__main__':
