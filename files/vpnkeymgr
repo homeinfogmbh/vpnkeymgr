@@ -1,59 +1,78 @@
 #! /usr/bin/env python3
-"""OpenVPN key management utility
+"""OpenVPN key management utility.
 
 Usage:
-    vpnkeymgr (gen|generate) <vars> [--name=<name>] [options]
-    vpnkeymgr sync <names>... [--host=<host>] [--path=<path>] \
-[--user=<user>] [--identity=<identity>] [options]
+    vpnkeymgr (gen|generate) <vars> [options]
+    vpnkeymgr sync <names>... [options]
 
 Options:
-    --basedir=<basedir>  Specifies the base directory to use
+    --basedir=<basedir>     Specifies the base directory to use.
+    --name=<name>           Specifies the VPN key's common name.
+    --user=<user>           Specifies the user to login as.
+    --host=<host>           Specifies the sync target's host name.
+    --path=<path>           Specifies the sync target path.
+    --identity=<identity>   Specifies the identity file to use.
 """
-
-from logging import INFO, getLogger, basicConfig
-from docopt import docopt
-from os import getcwd
-from os.path import basename
+from pathlib import Path
 from subprocess import CalledProcessError
+from sys import stderr, exit as exit_
 
+from vpnkeymgr.common import print_called_process_error
 from vpnkeymgr.generator import Keygen
 from vpnkeymgr.syncer import Syncer
 
 
-if __name__ == '__main__':
-    basicConfig(level=INFO)
-    logger = getLogger(basename(__file__))
+def generate(basedir, options):
+    """Generates a new VPN key."""
 
-    options = docopt(__doc__)
-    basedir = options['--basedir'] or getcwd()
+    vars_ = options['<vars>']
+    name = options['--name']
+    keygen = Keygen(basedir, vars_)
+
+    try:
+        key = keygen.genkey(name=name)
+    except CalledProcessError:
+        print('Failed to generate key.', file=stderr)
+        return 1
+    else:
+        print('Generated key: {}.'.format(key))
+        return 0
+
+
+def synchronize(basedir, options):
+    """Synchronizes keys to a remote host."""
+
+    syncer = Syncer(basedir, *options['<names>'])
+    completed_process = syncer.sync(
+        host=options['--host'], path=options['--path'], user=options['--user'],
+        identity=options['--identity'])
+
+    try:
+        completed_process.check_returncode()
+    except CalledProcessError as called_process_error:
+        print_called_process_error(called_process_error)
+        return 3
+    else:
+        return 0
+
+
+def main(options):
+    """Runs the VPN key manager."""
+
+    if options['--basedir']:
+        basedir = Path(options['--basedir'])
+    else:
+        basedir = Path.cwd()
 
     if options['gen'] or options['generate']:
-        vars_ = options['<vars>']
-        name = options['--name']
-        keygen = Keygen(basedir, vars_)
-
-        try:
-            key = keygen.genkey(name=name)
-        except CalledProcessError:
-            logger.error('Failed to generate key')
-            exit(1)
-        else:
-            logger.info('Generated key: {}'.format(key))
-            exit(0)
+        return generate(basedir, options)
     elif options['sync']:
-        clients = options['<names>']
-        host = options['--host']
-        path = options['--path']
-        user = options['--user']
-        identity = options['--identity']
-        syncer = Syncer(basedir, *clients)
-
-        try:
-            syncer.sync(host=host, path=path, user=user, identity=identity)
-        except CalledProcessError:
-            exit(3)
-        else:
-            exit(0)
+        return synchronize(basedir, options)
     else:
-        logger.error('W00t teh shizzle?')
+        print('Unimplemented operation mode.', file=stderr)
         exit(4)
+
+
+if __name__ == '__main__':
+    from docopt import docopt
+    exit_(main(docopt(__doc__)))
