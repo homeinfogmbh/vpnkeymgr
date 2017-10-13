@@ -4,7 +4,11 @@ from distutils.core import setup
 
 setup(
     name='vpnkeymgr',
+    author='HOMEINFO - Digitale Informationssysteme GmbH',
+    author_email='<info at homeinfo dot de>',
+    maintainer='Richard Neumann',
+    maintainer_email='<r dot neumann at homeinfo priod de>',
     requires=['docopt'],
     packages=['vpnkeymgr'],
-    data_files=[('/usr/bin', ['files/vpnkeymgr'])],
-    description=('HOMEINFO OpenVPN key manager'))
+    scripts=['files/vpnkeymgr'],
+    description=('HOMEINFO OpenVPN key manager.'))
