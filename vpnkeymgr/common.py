@@ -10,8 +10,8 @@ def print_called_process_error(called_process_error, stdout=True):
     """Prints a CalledProcessError."""
 
     if stdout:
-        with suppress(ValueError):
+        with suppress(AttributeError, ValueError):
             print(called_process_error.stdout.decode())
 
-    with suppress(ValueError):
+    with suppress(AttributeError, ValueError):
         print(called_process_error.stderr.decode(), file=stderr)
