@@ -49,12 +49,14 @@ class Syncer:
         for file in self.files:
             yield self.keys_dir.joinpath(file)
 
-    def sync(self, host=HOST, path=PATH, user=USER, identity=None):
+    def sync(self, host=None, path=None, user=None, identity=None):
         """Synchronizes the respective files to the specified destination
         with an optional alternative user and identity file.
         """
         cmd = self.command.format(
             identity=IDENTITY.format(identity) if identity else '',
-            files=' '.join(str(path) for path in self.paths), user=user,
-            host=host, path=path)
+            files=' '.join(str(path) for path in self.paths),
+            user=USER if user is None else user,
+            host=HOST if host is None else host,
+            path=PATH if path is None else path)
         return run(cmd, shell=True)
