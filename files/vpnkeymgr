@@ -26,14 +26,14 @@ def generate(basedir, options):
     vars_ = options['<vars>']
     name = options['--name']
     keygen = Keygen(basedir, vars_)
+    completed_process = keygen.genkey(name=name)
 
     try:
-        key = keygen.genkey(name=name)
+        completed_process.check_returncode()
     except CalledProcessError:
         print('Failed to generate key.', file=stderr)
         return 1
     else:
-        print('Generated key: {}.'.format(key))
         return 0
 
 

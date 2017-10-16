@@ -55,5 +55,6 @@ class Syncer:
         """
         cmd = self.command.format(
             identity=IDENTITY.format(identity) if identity else '',
-            files=' '.join(self.paths), user=user, host=host, path=path)
+            files=' '.join(str(path) for path in self.paths), user=user,
+            host=host, path=path)
         return run(cmd, shell=True)
