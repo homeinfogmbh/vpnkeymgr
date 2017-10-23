@@ -26,7 +26,7 @@ def generate(basedir, options):
     vars_ = options['<vars>']
     name = options['--name']
     keygen = Keygen(basedir, vars_)
-    completed_process = keygen.genkey(name=name)
+    key_name, completed_process = keygen.genkey(name=name)
 
     try:
         completed_process.check_returncode()
@@ -34,7 +34,9 @@ def generate(basedir, options):
         print('Failed to generate key.', file=stderr)
         return 1
     else:
-        return 0
+        print(f'Generated key "{key_name}".')
+
+    return 0
 
 
 def synchronize(basedir, options):
@@ -50,8 +52,8 @@ def synchronize(basedir, options):
     except CalledProcessError as called_process_error:
         print_called_process_error(called_process_error)
         return 3
-    else:
-        return 0
+
+    return 0
 
 
 def main(options):

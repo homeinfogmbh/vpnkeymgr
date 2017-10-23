@@ -8,7 +8,6 @@ __all__ = ['Syncer']
 HOST = 'srv.homeinfo.de'
 PATH = '/usr/lib/terminals/keys'
 USER = 'termgr'
-IDENTITY = '-i {}'
 CMD_TEMP = (
     '/usr/bin/rsync -auvce "/usr/bin/ssh {identity} '
     '-o UserKnownHostsFile=/dev/null '
@@ -40,8 +39,8 @@ class Syncer:
         yield 'ca.crt'
 
         for client in self.clients:
-            yield '{}.key'.format(client)
-            yield '{}.crt'.format(client)
+            yield f'{client}.key'
+            yield f'{client}.crt'
 
     @property
     def paths(self):
@@ -54,7 +53,7 @@ class Syncer:
         with an optional alternative user and identity file.
         """
         cmd = self.command.format(
-            identity=IDENTITY.format(identity) if identity else '',
+            identity=f'-i {identity}' if identity else '',
             files=' '.join(str(path) for path in self.paths),
             user=USER if user is None else user,
             host=HOST if host is None else host,
