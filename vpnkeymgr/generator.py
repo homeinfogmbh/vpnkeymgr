@@ -43,13 +43,18 @@ class Keygen:
         self.vars_file = vars_file
         self.command = command
 
+    @property
+    def keys_dir(self):
+        """Returns the keys directory."""
+        return self.basedir.joinpath('keys')
+
     def exists(self, name):
         """Checks whether we already issued
         a certificate for this common name.
         """
         for template in FILES:
             file = template.format(name)
-            path = self.basedir.joinpath(file)
+            path = self.keys_dir.joinpath(file)
 
             if path.exists():
                 return True
