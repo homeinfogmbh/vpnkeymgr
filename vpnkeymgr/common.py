@@ -3,7 +3,10 @@
 from contextlib import suppress
 from sys import stderr
 
-__all__ = ['print_called_process_error']
+__all__ = ['FILES', 'print_called_process_error']
+
+
+FILES = ('{}.key', '{}.csr', '{}.crt')
 
 
 def print_called_process_error(called_process_error, stdout=True):

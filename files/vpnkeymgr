@@ -17,7 +17,8 @@ from pathlib import Path
 from subprocess import CalledProcessError
 from sys import stderr, exit as exit_
 
-from vpnkeymgr import print_called_process_error, Keygen, Syncer
+from vpnkeymgr import CommonNameExists, print_called_process_error, Keygen, \
+    Syncer
 
 
 def generate(basedir, options):
@@ -26,7 +27,13 @@ def generate(basedir, options):
     vars_ = options['<vars>']
     name = options['--name']
     keygen = Keygen(basedir, vars_)
-    key_name, completed_process = keygen.genkey(name=name)
+
+    try:
+        key_name, completed_process = keygen.genkey(name=name)
+    except CommonNameExists as common_name_exists:
+        print('Common name "{}" already exists.'.format(
+            common_name_exists), file=stderr, flush=True)
+        return 2
 
     try:
         completed_process.check_returncode()
