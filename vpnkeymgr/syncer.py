@@ -2,6 +2,9 @@
 
 from subprocess import run
 
+from vpnkeymgr.common import PKI
+
+
 __all__ = ['Syncer']
 
 
@@ -18,43 +21,30 @@ CMD_TEMP = (
 KEYS_DIR = 'keys'
 
 
-class Syncer:
+class Syncer(PKI):
     """Synchronizes OpenVPN keys."""
 
-    def __init__(self, basedir, *clients, command=CMD_TEMP, keys_dir=KEYS_DIR):
+    def __init__(self, basedir, *clients):
         """Sets desired clients and an optional basedir."""
-        self.basedir = basedir
+        super().__init__(basedir)
         self.clients = clients
-        self.command = command
-        self._keys_dir = keys_dir
-
-    @property
-    def keys_dir(self):
-        """Returns the keys directory."""
-        return self.basedir.joinpath(self._keys_dir)
 
     @property
     def files(self):
         """Yields client files."""
-        yield 'ca.crt'
+        yield self.pki_dir.joinpath('ca.crt')
 
         for client in self.clients:
-            yield f'{client}.key'
-            yield f'{client}.crt'
-
-    @property
-    def paths(self):
-        """Yields file paths."""
-        for file in self.files:
-            yield self.keys_dir.joinpath(file)
+            yield self.keys_dir.joinpath(f'{client}.key')
+            yield self.keys_dir.joinpath(f'{client}.crt')
 
     def sync(self, host=None, path=None, user=None, identity=None):
         """Synchronizes the respective files to the specified destination
         with an optional alternative user and identity file.
         """
-        cmd = self.command.format(
+        cmd = CMD_TEMP.format(
             identity=f'-i {identity}' if identity else '',
-            files=' '.join(str(path) for path in self.paths),
+            files=' '.join(str(file) for file in self.files),
             user=USER if user is None else user,
             host=HOST if host is None else host,
             path=PATH if path is None else path)
