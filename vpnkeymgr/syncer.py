@@ -36,7 +36,7 @@ class Syncer(PKI):
 
         for client in self.clients:
             yield self.keys_dir.joinpath(f'{client}.key')
-            yield self.keys_dir.joinpath(f'{client}.crt')
+            yield self.certs_dir.joinpath(f'{client}.crt')
 
     def sync(self, host=None, path=None, user=None, identity=None):
         """Synchronizes the respective files to the specified destination
