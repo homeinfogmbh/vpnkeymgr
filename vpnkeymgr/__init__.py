@@ -1,7 +1,8 @@
 """OpenVPN key management library."""
 
-from vpnkeymgr.common import print_cpr
-from vpnkeymgr.generator import CommonNameExists, Keygen
+from vpnkeymgr.exceptions import CommonNameExists
+from vpnkeymgr.functions import print_cpr
+from vpnkeymgr.generator import Keygen
 from vpnkeymgr.syncer import Syncer
 
 

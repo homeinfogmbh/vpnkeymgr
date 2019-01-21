@@ -4,41 +4,12 @@ from subprocess import CalledProcessError, run
 from sys import stderr
 from uuid import uuid4
 
-from vpnkeymgr.common import PKI
+from vpnkeymgr.exceptions import CalledProcessErrors, CommonNameExists
+from vpnkeymgr.functions import get_command
+from vpnkeymgr.pki import PKI
 
 
-__all__ = ['CalledProcessErrors', 'Keygen']
-
-
-EASYRSA = '/usr/bin/easyrsa'
-COMMAND = 'build-client-full'
-NOPASS = 'nopass'
-
-
-class CommonNameExists(Exception):
-    """Indicates that the respective common name
-    has already a key / certificate issued.
-    """
-
-
-class CalledProcessErrors(Exception):
-    """Indicates that there were errors during several process calls."""
-
-    def __init__(self, called_process_errors):
-        """Sets the CalledProcessErrors."""
-        super().__init__(called_process_errors)
-        self.called_process_errors = called_process_errors
-
-    def __iter__(self):
-        """Yields the CalledProcessErrors."""
-        for called_process_error in self.called_process_errors:
-            yield called_process_error
-
-
-def get_command(common_name):
-    """Returns a command tuple for the respective common name."""
-
-    return (EASYRSA, COMMAND, common_name, NOPASS)
+__all__ = ['Keygen']
 
 
 class Keygen(PKI):
@@ -48,15 +19,13 @@ class Keygen(PKI):
         """Checks whether we already issued
         a certificate for this common name.
         """
-        keyfile = '{}.key'.format(name)
-        keyfile = self.keys_dir.joinpath(keyfile)
-        crtfile = '{}.crt'.format(name)
-        crtfile = self.certs_dir.joinpath(crtfile)
+        keyfile = self.keys_dir.joinpath(f'{name}.key')
+        crtfile = self.certs_dir.joinpath(f'{name}.crt')
         return keyfile.exists() or crtfile.exists()
 
     def genkey(self, name=None):
         """Generates a new key."""
-        name = str(uuid4()) if name is None else name
+        name = uuid4().hex if name is None else name
 
         if self.exists(name):
             raise CommonNameExists(name)

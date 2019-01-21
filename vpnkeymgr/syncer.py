@@ -2,7 +2,7 @@
 
 from subprocess import run
 
-from vpnkeymgr.common import PKI
+from vpnkeymgr.pki import PKI
 
 
 __all__ = ['Syncer']
@@ -32,7 +32,7 @@ class Syncer(PKI):
     @property
     def files(self):
         """Yields client files."""
-        yield self.pki_dir.joinpath('ca.crt')
+        yield self.ca_cert
 
         for client in self.clients:
             yield self.keys_dir.joinpath(f'{client}.key')
