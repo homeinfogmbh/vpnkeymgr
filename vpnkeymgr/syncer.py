@@ -2,15 +2,13 @@
 
 from subprocess import run
 
+from vpnkeymgr.config import CONFIG
 from vpnkeymgr.pki import PKI
 
 
 __all__ = ['Syncer']
 
 
-HOST = 'srv.homeinfo.de'
-PATH = '/usr/lib/terminals/keys'
-USER = 'termgr'
 CMD_TEMP = (
     '/usr/bin/rsync -auvce "/usr/bin/ssh {identity} '
     '-o UserKnownHostsFile=/dev/null '
@@ -18,7 +16,6 @@ CMD_TEMP = (
     '-o ConnectTimeout=5" '
     '--chmod=F640 '
     '{files} {user}@{host}:{path}')
-KEYS_DIR = 'keys'
 
 
 class Syncer(PKI):
@@ -42,10 +39,17 @@ class Syncer(PKI):
         """Synchronizes the respective files to the specified destination
         with an optional alternative user and identity file.
         """
+        if host is None:
+            host = CONFIG['sync']['host']
+
+        if path is None:
+            path = CONFIG['sync']['path']
+
+        if user is None:
+            user = CONFIG['sync']['user']
+
         cmd = CMD_TEMP.format(
             identity=f'-i {identity}' if identity else '',
             files=' '.join(str(file) for file in self.files),
-            user=USER if user is None else user,
-            host=HOST if host is None else host,
-            path=PATH if path is None else path)
+            user=user, host=host, path=path)
         return run(cmd, shell=True)

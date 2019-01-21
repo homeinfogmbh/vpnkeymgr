@@ -31,8 +31,8 @@ def generate(options):
     try:
         key_name, completed_process = keygen.genkey(name=name)
     except CommonNameExists as common_name_exists:
-        print('Common name "{}" already exists.'.format(
-            common_name_exists), file=stderr, flush=True)
+        print(f'Common name "{common_name_exists}" already exists.',
+              file=stderr, flush=True)
         return 2
 
     try:
