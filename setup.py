@@ -11,4 +11,4 @@ setup(
     requires=['docopt'],
     packages=['vpnkeymgr'],
     scripts=['files/vpnkeymgr'],
-    description=('HOMEINFO OpenVPN key manager.'))
+    description=('OpenVPN key manager for easyrsa3.'))
