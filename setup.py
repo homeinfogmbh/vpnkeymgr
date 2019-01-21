@@ -4,6 +4,7 @@ from distutils.core import setup
 
 setup(
     name='vpnkeymgr',
+    version='latest',
     author='HOMEINFO - Digitale Informationssysteme GmbH',
     author_email='<info at homeinfo dot de>',
     maintainer='Richard Neumann',
