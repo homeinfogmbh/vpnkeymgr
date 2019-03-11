@@ -40,9 +40,8 @@ def generate(options):
     except CalledProcessError:
         print('Failed to generate key.', file=stderr)
         return 1
-    else:
-        print(f'Generated key "{key_name}".')
 
+    print(f'Generated key "{key_name}".')
     return 0
 
 
