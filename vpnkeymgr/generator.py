@@ -42,8 +42,8 @@ class Keygen(PKI):
             try:
                 name, completed_process = self.genkey(name=name)
             except CommonNameExists as common_name_exists:
-                print('Common name "{}" already exists.'.format(
-                    common_name_exists), file=stderr, flush=True)
+                print(f'Common name "{common_name_exists}" already exists.',
+                      file=stderr, flush=True)
             else:
                 try:
                     completed_process.check_returncode()
