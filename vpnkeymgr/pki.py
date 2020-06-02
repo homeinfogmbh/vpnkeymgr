@@ -26,7 +26,7 @@ class PKI:
     @property
     def crl(self):
         """Returns the path of the certificate revocation list."""
-        self.pki_dir.joinpath('crl.pem')
+        return self.pki_dir.joinpath('crl.pem')
 
     @property
     def keys_dir(self):
