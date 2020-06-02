@@ -31,6 +31,9 @@ class Syncer(PKI):
         """Yields client files."""
         yield self.ca_cert
 
+        if self.crl.is_file():
+            yield self.crl
+
         for client in self.clients:
             yield self.keys_dir.joinpath(f'{client}.key')
             yield self.certs_dir.joinpath(f'{client}.crt')
@@ -52,4 +55,4 @@ class Syncer(PKI):
             identity=f'-i {identity}' if identity else '',
             files=' '.join(str(file) for file in self.files),
             user=user, host=host, path=path)
-        return run(cmd, shell=True)
+        return run(cmd, shell=True, check=True)
