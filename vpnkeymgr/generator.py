@@ -1,7 +1,7 @@
 """OpenVPN key generator."""
 
+from logging import getLogger
 from subprocess import CalledProcessError, run
-from sys import stderr
 from uuid import uuid4
 
 from vpnkeymgr.exceptions import CalledProcessErrors, CommonNameExists
@@ -10,6 +10,9 @@ from vpnkeymgr.pki import PKI
 
 
 __all__ = ['Keygen']
+
+
+LOGGER = getLogger('vpnkeymgr')
 
 
 class Keygen(PKI):
@@ -41,9 +44,8 @@ class Keygen(PKI):
         for name in names:
             try:
                 name, completed_process = self.genkey(name=name)
-            except CommonNameExists as common_name_exists:
-                print(f'Common name "{common_name_exists}" already exists.',
-                      file=stderr, flush=True)
+            except CommonNameExists:
+                LOGGER.error('Common name "%s" already exists.', name)
                 continue
 
             try:
