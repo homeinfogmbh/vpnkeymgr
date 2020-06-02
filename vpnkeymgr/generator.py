@@ -31,7 +31,7 @@ class Keygen(PKI):
             raise CommonNameExists(name)
 
         command = get_command(name)
-        completed_process = run(command, cwd=self.basedir)
+        completed_process = run(command, cwd=self.basedir, check=True)
         return (name, completed_process)
 
     def genkeys(self, *names):
@@ -44,13 +44,15 @@ class Keygen(PKI):
             except CommonNameExists as common_name_exists:
                 print(f'Common name "{common_name_exists}" already exists.',
                       file=stderr, flush=True)
-            else:
-                try:
-                    completed_process.check_returncode()
-                except CalledProcessError as called_process_error:
-                    called_process_errors.append(called_process_error)
-                else:
-                    yield name
+                continue
+
+            try:
+                completed_process.check_returncode()
+            except CalledProcessError as called_process_error:
+                called_process_errors.append(called_process_error)
+                continue
+
+            yield name
 
         if called_process_errors:
             raise CalledProcessErrors(called_process_errors)

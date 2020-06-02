@@ -1,36 +1,8 @@
 #! /usr/bin/env python3
-"""OpenVPN key management utility.
+"""OpenVPN key management utility."""
 
-Usage:
-    vpnkeymgr (gen|generate) <name> [options]
-    vpnkeymgr sync <names>... [options]
-
-Options:
-    --basedir=<basedir>     Specifies the base directory to use.
-    --user=<user>           Specifies the user to login as.
-    --host=<host>           Specifies the sync target's host name.
-    --path=<path>           Specifies the sync target path.
-    --identity=<identity>   Specifies the identity file to use.
-"""
-from sys import exit, stderr    # pylint: disable=W0622
-
-from docopt import docopt
-
-from vpnkeymgr import generate, synchronize
-
-
-def main(options):
-    """Runs the VPN key manager."""
-
-    if options['gen'] or options['generate']:
-        return generate(options)
-
-    if options['sync']:
-        return synchronize(options)
-
-    print('Unimplemented operation mode.', file=stderr)
-    return 4
+from vpnkeymgr.cli import main
 
 
 if __name__ == '__main__':
-    exit(main(docopt(__doc__)))
+    main()

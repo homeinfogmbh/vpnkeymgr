@@ -2,7 +2,6 @@
 
 from subprocess import run
 
-from vpnkeymgr.config import CONFIG
 from vpnkeymgr.pki import PKI
 
 
@@ -38,18 +37,10 @@ class Syncer(PKI):
             yield self.keys_dir.joinpath(f'{client}.key')
             yield self.certs_dir.joinpath(f'{client}.crt')
 
-    def sync(self, host=None, path=None, user=None, identity=None):
+    def sync(self, host, path, user, identity=None):
         """Synchronizes the respective files to the specified destination
         with an optional alternative user and identity file.
         """
-        if host is None:
-            host = CONFIG['sync']['host']
-
-        if path is None:
-            path = CONFIG['sync']['path']
-
-        if user is None:
-            user = CONFIG['sync']['user']
 
         cmd = CMD_TEMP.format(
             identity=f'-i {identity}' if identity else '',
