@@ -92,4 +92,8 @@ def main():
 
     args = get_args()
     basicConfig(format=LOG_FORMAT, level=DEBUG if args.debug else INFO)
-    return args.func(args)
+
+    try:
+        return args.func(args)
+    except AttributeError:
+        return 0
