@@ -26,7 +26,7 @@ def generate(args):
     keygen = Keygen(args.basedir)
 
     try:
-        for name in keygen.genkeys(args.name):
+        for name in keygen.genkeys(*args.name):
             LOGGER.info('Generated key "%s".', name)
     except CalledProcessErrors as called_process_errors:
         for called_process_error in called_process_errors:
