@@ -1,6 +1,7 @@
 """Common functions."""
 
 from contextlib import suppress
+from subprocess import CalledProcessError
 from sys import stderr
 
 
@@ -12,7 +13,7 @@ COMMAND = 'build-client-full'
 NOPASS = 'nopass'
 
 
-def print_cpr(called_process_error, stdout=True):
+def print_cpr(called_process_error: CalledProcessError, stdout: bool = True):
     """Prints a CalledProcessError."""
 
     if stdout:
@@ -23,7 +24,7 @@ def print_cpr(called_process_error, stdout=True):
         print(called_process_error.stderr.decode(), file=stderr)
 
 
-def get_command(common_name):
+def get_command(common_name: str) -> list[str]:
     """Returns a command tuple for the respective common name."""
 
-    return (EASYRSA, COMMAND, common_name, NOPASS)
+    return [EASYRSA, COMMAND, common_name, NOPASS]

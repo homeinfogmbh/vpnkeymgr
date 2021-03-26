@@ -1,6 +1,6 @@
 """Command line interface functions."""
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from logging import DEBUG, INFO, basicConfig, getLogger
 from pathlib import Path
 from subprocess import CalledProcessError
@@ -20,7 +20,7 @@ LOG_FORMAT = '[%(levelname)s] %(name)s: %(message)s'
 LOGGER = getLogger('vpnkeymgr')
 
 
-def generate(args):
+def generate(args: Namespace) -> int:
     """Generates a new VPN key."""
 
     keygen = Keygen(args.basedir)
@@ -37,7 +37,7 @@ def generate(args):
     return 0
 
 
-def synchronize(args):
+def synchronize(args: Namespace) -> int:
     """Synchronizes keys to a remote host."""
 
     syncer = Syncer(args.basedir, *args.name)
@@ -53,7 +53,7 @@ def synchronize(args):
     return 0
 
 
-def get_args():
+def get_args() -> Namespace:
     """Parses the command line arguments."""
 
     parser = ArgumentParser(description=DESCRIPTION)
@@ -87,7 +87,7 @@ def get_args():
     return parser.parse_args()
 
 
-def main():
+def main() -> int:
     """Runs the VPN key manager."""
 
     args = get_args()

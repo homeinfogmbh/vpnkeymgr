@@ -1,6 +1,7 @@
 """Common library for the VPN key manager."""
 
 from pathlib import Path
+from typing import Union
 
 
 __all__ = ['PKI']
@@ -9,7 +10,7 @@ __all__ = ['PKI']
 class PKI:
     """Base class for PKI."""
 
-    def __init__(self, basedir):
+    def __init__(self, basedir: Union[Path, str]):
         """Sets the base dir."""
         self.basedir = Path(basedir)
 

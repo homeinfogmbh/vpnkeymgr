@@ -1,7 +1,8 @@
 """OpenVPN key generator."""
 
 from logging import getLogger
-from subprocess import CalledProcessError, run
+from subprocess import CalledProcessError, CompletedProcess, run
+from typing import Iterator, NamedTuple, Optional
 from uuid import uuid4
 
 from vpnkeymgr.exceptions import CalledProcessErrors, CommonNameExists
@@ -15,10 +16,17 @@ __all__ = ['Keygen']
 LOGGER = getLogger('vpnkeymgr')
 
 
+class KeygenResult(NamedTuple):
+    """Result from generating a key."""
+
+    name: str
+    completed_process: CompletedProcess
+
+
 class Keygen(PKI):
     """OpenVPN key generator."""
 
-    def exists(self, name):
+    def exists(self, name: str) -> bool:
         """Checks whether we already issued
         a certificate for this common name.
         """
@@ -26,7 +34,7 @@ class Keygen(PKI):
         crtfile = self.certs_dir.joinpath(f'{name}.crt')
         return keyfile.exists() or crtfile.exists()
 
-    def genkey(self, name=None):
+    def genkey(self, name: Optional[str] = None) -> KeygenResult:
         """Generates a new key."""
         name = uuid4().hex if name is None else name
 
@@ -35,9 +43,9 @@ class Keygen(PKI):
 
         command = get_command(name)
         completed_process = run(command, cwd=self.basedir, check=True)
-        return (name, completed_process)
+        return KeygenResult(name, completed_process)
 
-    def genkeys(self, *names):
+    def genkeys(self, *names: str) -> Iterator[str]:
         """Generates multiple keys."""
         called_process_errors = []
 

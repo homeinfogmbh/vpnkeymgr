@@ -1,5 +1,7 @@
 """Common exceptions."""
 
+from subprocess import CalledProcessError
+
 
 __all__ = ['CalledProcessErrors', 'CommonNameExists']
 
@@ -7,7 +9,7 @@ __all__ = ['CalledProcessErrors', 'CommonNameExists']
 class CalledProcessErrors(Exception):
     """Indicates that there were errors during several process calls."""
 
-    def __init__(self, called_process_errors):
+    def __init__(self, called_process_errors: list[CalledProcessError]):
         """Sets the CalledProcessErrors."""
         super().__init__(called_process_errors)
         self.called_process_errors = called_process_errors
