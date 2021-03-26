@@ -4,19 +4,11 @@ from pathlib import Path
 from subprocess import CompletedProcess, run
 from typing import Optional, Union
 
+from vpnkeymgr.functions import get_rsync_cmd
 from vpnkeymgr.pki import PKI
 
 
 __all__ = ['Syncer']
-
-
-CMD_TEMP = (
-    '/usr/bin/rsync -auvce "/usr/bin/ssh {identity} '
-    '-o UserKnownHostsFile=/dev/null '
-    '-o StrictHostKeyChecking=no '
-    '-o ConnectTimeout=5" '
-    '--chmod=F640 '
-    '{files} {user}@{host}:{path}')
 
 
 class Syncer(PKI):
@@ -45,8 +37,7 @@ class Syncer(PKI):
         with an optional alternative user and identity file.
         """
 
-        cmd = CMD_TEMP.format(
-            identity=f'-i {identity}' if identity else '',
-            files=' '.join(str(file) for file in self.files),
-            user=user, host=host, path=path)
+        cmd = get_rsync_cmd(
+            f'-i {identity}' if identity else '', self.files, user=user,
+            host=host, path=path)
         return run(cmd, shell=True, check=True)

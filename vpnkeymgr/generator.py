@@ -6,7 +6,7 @@ from typing import Iterator, NamedTuple, Optional
 from uuid import uuid4
 
 from vpnkeymgr.exceptions import CalledProcessErrors, CommonNameExists
-from vpnkeymgr.functions import get_command
+from vpnkeymgr.functions import get_easyrsa_cmd
 from vpnkeymgr.pki import PKI
 
 
@@ -41,7 +41,7 @@ class Keygen(PKI):
         if self.exists(name):
             raise CommonNameExists(name)
 
-        command = get_command(name)
+        command = get_easyrsa_cmd(name)
         completed_process = run(command, cwd=self.basedir, check=True)
         return KeygenResult(name, completed_process)
 
