@@ -1,8 +1,0 @@
-#! /usr/bin/env python3
-"""OpenVPN key management utility."""
-
-from vpnkeymgr.cli import main
-
-
-if __name__ == '__main__':
-    main()
