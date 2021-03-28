@@ -46,7 +46,7 @@ def get_ssh_cmd(identity: Union[Path, str]) -> list[str]:
 
 
 def get_rsync_cmd(identity: Union[Path, str], files: Iterable[Path],
-                  user: str, host: str, path: Path) -> list[str]:
+                  user: str, host: str, path: Path) -> str:
     """Returns the command for rsync."""
 
     return ' '.join([
