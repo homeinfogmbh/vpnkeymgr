@@ -40,4 +40,4 @@ class Syncer(PKI):
         cmd = get_rsync_cmd(
             f'-i {identity}' if identity else '', self.files, user=user,
             host=host, path=path)
-        return run(cmd, shell=True, check=True)
+        return run(cmd, check=True)

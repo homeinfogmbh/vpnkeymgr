@@ -46,14 +46,14 @@ def get_ssh_cmd(identity: Union[Path, str]) -> list[str]:
 
 
 def get_rsync_cmd(identity: Union[Path, str], files: Iterable[Path],
-                  user: str, host: str, path: Path) -> str:
+                  user: str, host: str, path: Path) -> list[str]:
     """Returns the command for rsync."""
 
-    return ' '.join([
+    return [
         '/usr/bin/rsync',
         '-auvce',
-        '"' + ' '.join(get_ssh_cmd(identity)) + '"',
+        ' '.join(get_ssh_cmd(identity)),
         '--chmod=F640',
         *(str(file) for file in files),
         f'{user}@{host}:{path}'
-    ])
+    ]
