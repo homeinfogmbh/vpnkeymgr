@@ -1,10 +1,11 @@
 """Configuration file parser."""
 
 from configparser import ConfigParser
+from pathlib import Path
 
 
-__all__ = ['CONFIG']
+__all__ = ['CONFIG', 'CONFIG_FILE']
 
 
 CONFIG = ConfigParser()
-CONFIG.read('/etc/vpnkeymgr.conf')
+CONFIG_FILE = Path('/etc/vpnkeymgr.conf')

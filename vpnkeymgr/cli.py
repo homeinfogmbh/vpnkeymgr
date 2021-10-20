@@ -5,7 +5,7 @@ from logging import DEBUG, INFO, basicConfig, getLogger
 from pathlib import Path
 from subprocess import CalledProcessError
 
-from vpnkeymgr.config import CONFIG
+from vpnkeymgr.config import CONFIG, CONFIG_FILE
 from vpnkeymgr.exceptions import CalledProcessErrors
 from vpnkeymgr.functions import print_cpr
 from vpnkeymgr.generator import Keygen
@@ -60,6 +60,8 @@ def get_args() -> Namespace:
     parser.add_argument(
         '-d', '--basedir', type=Path, default=Path.cwd(),
         help='base directory path')
+    parser.add_argument('-f', '--config-file', type=Path, metavar='file',
+                         default=CONFIG_FILE, help='config file to use')
     parser.add_argument(
         '--debug', action='store_true', help='print debug messages')
     subparsers = parser.add_subparsers()
@@ -91,6 +93,7 @@ def main() -> int:
     """Runs the VPN key manager."""
 
     args = get_args()
+    CONFIG.read(args.config_file)
     basicConfig(format=LOG_FORMAT, level=DEBUG if args.debug else INFO)
 
     try:
