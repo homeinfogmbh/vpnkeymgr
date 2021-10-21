@@ -36,7 +36,6 @@ class Syncer(PKI):
         """Synchronizes the respective files to the specified destination
         with an optional alternative user and identity file.
         """
-
         cmd = get_rsync_cmd(
             f'-i {identity}' if identity else '', self.files, user=user,
             host=host, path=path)
