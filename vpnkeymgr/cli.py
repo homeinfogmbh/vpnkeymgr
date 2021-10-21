@@ -61,7 +61,7 @@ def get_args() -> Namespace:
         '-d', '--basedir', type=Path, default=Path.cwd(),
         help='base directory path')
     parser.add_argument('-f', '--config-file', type=Path, metavar='file',
-                         default=CONFIG_FILE, help='config file to use')
+                        default=CONFIG_FILE, help='config file to use')
     parser.add_argument(
         '--debug', action='store_true', help='print debug messages')
     subparsers = parser.add_subparsers()
