@@ -17,24 +17,24 @@ class PKI:
     @property
     def pki_dir(self):
         """Returns the PKI directory."""
-        return self.basedir.joinpath('pki')
+        return self.basedir / 'pki'
 
     @property
     def ca_cert(self):
         """Returns the path to the CA certificate."""
-        return self.pki_dir.joinpath('ca.crt')
+        return self.pki_dir / 'ca.crt'
 
     @property
     def crl(self):
         """Returns the path of the certificate revocation list."""
-        return self.pki_dir.joinpath('crl.pem')
+        return self.pki_dir / 'crl.pem'
 
     @property
     def keys_dir(self):
         """Returns the keys directory."""
-        return self.pki_dir.joinpath('private')
+        return self.pki_dir / 'private'
 
     @property
     def certs_dir(self):
         """Returns the keys directory."""
-        return self.pki_dir.joinpath('issued')
+        return self.pki_dir / 'issued'

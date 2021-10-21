@@ -28,8 +28,8 @@ class Syncer(PKI):
             yield self.crl
 
         for client in self.clients:
-            yield self.keys_dir.joinpath(f'{client}.key')
-            yield self.certs_dir.joinpath(f'{client}.crt')
+            yield self.keys_dir / f'{client}.key'
+            yield self.certs_dir / f'{client}.crt'
 
     def sync(self, host: str, path: Union[Path, str], user: str,
              identity: Optional[Union[Path, str]] = None) -> CompletedProcess:
