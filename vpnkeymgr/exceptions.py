@@ -16,8 +16,7 @@ class CalledProcessErrors(Exception):
 
     def __iter__(self):
         """Yields the CalledProcessErrors."""
-        for called_process_error in self.called_process_errors:
-            yield called_process_error
+        return iter(self.called_process_errors)
 
 
 class CommonNameExists(Exception):
