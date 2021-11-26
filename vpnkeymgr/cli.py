@@ -60,8 +60,6 @@ def get_args() -> Namespace:
     parser.add_argument(
         '-d', '--basedir', type=Path, default=Path.cwd(),
         help='base directory path')
-    parser.add_argument('-f', '--config-file', type=Path, metavar='file',
-                        default=CONFIG_FILE, help='config file to use')
     parser.add_argument(
         '--debug', action='store_true', help='print debug messages')
     subparsers = parser.add_subparsers()
@@ -92,8 +90,8 @@ def get_args() -> Namespace:
 def main() -> int:
     """Runs the VPN key manager."""
 
+    CONFIG.read(CONFIG_FILE)
     args = get_args()
-    CONFIG.read(args.config_file)
     basicConfig(format=LOG_FORMAT, level=DEBUG if args.debug else INFO)
 
     try:
