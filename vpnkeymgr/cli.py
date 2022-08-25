@@ -12,7 +12,7 @@ from vpnkeymgr.generator import Keygen
 from vpnkeymgr.syncer import Syncer
 
 
-__all__ = ['main']
+__all__ = ['generate', 'synchronize', 'main']
 
 
 DESCRIPTION = 'OpenVPN key management utility.'
@@ -59,30 +59,36 @@ def get_args() -> Namespace:
     parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument(
         '-d', '--basedir', type=Path, default=Path.cwd(),
-        help='base directory path')
+        help='base directory path'
+    )
     parser.add_argument(
-        '--debug', action='store_true', help='print debug messages')
+        '--debug', action='store_true', help='print debug messages'
+    )
     subparsers = parser.add_subparsers()
     gen = subparsers.add_parser('gen', help='generate certificates')
     gen.set_defaults(func=generate)
     gen.add_argument(
         'name', nargs='+', metavar='name',
-        help='the certificates to generate')
+        help='the certificates to generate'
+    )
     sync = subparsers.add_parser('sync', help='synchronize certificates')
     sync.add_argument(
         '-u', '--user', default=CONFIG['sync']['user'],
-        help='the target user name')
+        help='the target user name'
+    )
     sync.add_argument(
         '-H', '--host', default=CONFIG['sync']['host'],
-        help='the target host name')
+        help='the target host name'
+    )
     sync.add_argument(
         '-p', '--path', default=CONFIG['sync']['path'],
-        help='the target directory path')
-    sync.add_argument(
-        '-i', '--identity', help='the identity file to use')
+        help='the target directory path'
+    )
+    sync.add_argument('-i', '--identity', help='the identity file to use')
     sync.add_argument(
         'name', nargs='*', metavar='name',
-        help='the certificates to synchronize')
+        help='the certificates to synchronize'
+    )
     sync.set_defaults(func=synchronize)
     return parser.parse_args()
 

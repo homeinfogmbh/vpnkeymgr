@@ -31,12 +31,17 @@ class Syncer(PKI):
             yield self.keys_dir / f'{client}.key'
             yield self.certs_dir / f'{client}.crt'
 
-    def sync(self, host: str, path: Union[Path, str], user: str,
-             identity: Optional[Union[Path, str]] = None) -> CompletedProcess:
+    def sync(
+            self,
+            host: str,
+            path: Union[Path, str],
+            user: str,
+            identity: Optional[Union[Path, str]] = None
+    ) -> CompletedProcess:
         """Synchronizes the respective files to the specified destination
         with an optional alternative user and identity file.
         """
-        cmd = get_rsync_cmd(
+        return run(get_rsync_cmd(
             f'-i {identity}' if identity else '', self.files, user=user,
-            host=host, path=path)
-        return run(cmd, check=True)
+            host=host, path=path
+        ), check=True)
