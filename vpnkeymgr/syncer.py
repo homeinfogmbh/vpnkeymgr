@@ -8,7 +8,7 @@ from vpnkeymgr.functions import get_rsync_cmd
 from vpnkeymgr.pki import PKI
 
 
-__all__ = ['Syncer']
+__all__ = ["Syncer"]
 
 
 class Syncer(PKI):
@@ -28,20 +28,26 @@ class Syncer(PKI):
             yield self.crl
 
         for client in self.clients:
-            yield self.keys_dir / f'{client}.key'
-            yield self.certs_dir / f'{client}.crt'
+            yield self.keys_dir / f"{client}.key"
+            yield self.certs_dir / f"{client}.crt"
 
     def sync(
-            self,
-            host: str,
-            path: Union[Path, str],
-            user: str,
-            identity: Optional[Union[Path, str]] = None
+        self,
+        host: str,
+        path: Union[Path, str],
+        user: str,
+        identity: Optional[Union[Path, str]] = None,
     ) -> CompletedProcess:
         """Synchronizes the respective files to the specified destination
         with an optional alternative user and identity file.
         """
-        return run(get_rsync_cmd(
-            f'-i {identity}' if identity else '', self.files, user=user,
-            host=host, path=path
-        ), check=True)
+        return run(
+            get_rsync_cmd(
+                f"-i {identity}" if identity else "",
+                self.files,
+                user=user,
+                host=host,
+                path=path,
+            ),
+            check=True,
+        )

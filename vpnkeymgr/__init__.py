@@ -6,4 +6,4 @@ from vpnkeymgr.generator import Keygen
 from vpnkeymgr.syncer import Syncer
 
 
-__all__ = ['CommonNameExists', 'generate', 'synchronize', 'Keygen', 'Syncer']
+__all__ = ["CommonNameExists", "generate", "synchronize", "Keygen", "Syncer"]

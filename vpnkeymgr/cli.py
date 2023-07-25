@@ -12,12 +12,12 @@ from vpnkeymgr.generator import Keygen
 from vpnkeymgr.syncer import Syncer
 
 
-__all__ = ['generate', 'synchronize', 'main']
+__all__ = ["generate", "synchronize", "main"]
 
 
-DESCRIPTION = 'OpenVPN key management utility.'
-LOG_FORMAT = '[%(levelname)s] %(name)s: %(message)s'
-LOGGER = getLogger('vpnkeymgr')
+DESCRIPTION = "OpenVPN key management utility."
+LOG_FORMAT = "[%(levelname)s] %(name)s: %(message)s"
+LOGGER = getLogger("vpnkeymgr")
 
 
 def generate(args: Namespace) -> int:
@@ -30,7 +30,7 @@ def generate(args: Namespace) -> int:
             LOGGER.info('Generated key "%s".', name)
     except CalledProcessErrors as called_process_errors:
         for called_process_error in called_process_errors:
-            LOGGER.error('Called process error: %s', called_process_error)
+            LOGGER.error("Called process error: %s", called_process_error)
 
         return 2
 
@@ -42,7 +42,8 @@ def synchronize(args: Namespace) -> int:
 
     syncer = Syncer(args.basedir, *args.name)
     completed_process = syncer.sync(
-        host=args.host, path=args.path, user=args.user, identity=args.identity)
+        host=args.host, path=args.path, user=args.user, identity=args.identity
+    )
 
     try:
         completed_process.check_returncode()
@@ -58,36 +59,28 @@ def get_args() -> Namespace:
 
     parser = ArgumentParser(description=DESCRIPTION)
     parser.add_argument(
-        '-d', '--basedir', type=Path, default=Path.cwd(),
-        help='base directory path'
+        "-d", "--basedir", type=Path, default=Path.cwd(), help="base directory path"
     )
-    parser.add_argument(
-        '--debug', action='store_true', help='print debug messages'
-    )
+    parser.add_argument("--debug", action="store_true", help="print debug messages")
     subparsers = parser.add_subparsers()
-    gen = subparsers.add_parser('gen', help='generate certificates')
+    gen = subparsers.add_parser("gen", help="generate certificates")
     gen.set_defaults(func=generate)
     gen.add_argument(
-        'name', nargs='+', metavar='name',
-        help='the certificates to generate'
+        "name", nargs="+", metavar="name", help="the certificates to generate"
     )
-    sync = subparsers.add_parser('sync', help='synchronize certificates')
+    sync = subparsers.add_parser("sync", help="synchronize certificates")
     sync.add_argument(
-        '-u', '--user', default=CONFIG['sync']['user'],
-        help='the target user name'
+        "-u", "--user", default=CONFIG["sync"]["user"], help="the target user name"
     )
     sync.add_argument(
-        '-H', '--host', default=CONFIG['sync']['host'],
-        help='the target host name'
+        "-H", "--host", default=CONFIG["sync"]["host"], help="the target host name"
     )
     sync.add_argument(
-        '-p', '--path', default=CONFIG['sync']['path'],
-        help='the target directory path'
+        "-p", "--path", default=CONFIG["sync"]["path"], help="the target directory path"
     )
-    sync.add_argument('-i', '--identity', help='the identity file to use')
+    sync.add_argument("-i", "--identity", help="the identity file to use")
     sync.add_argument(
-        'name', nargs='*', metavar='name',
-        help='the certificates to synchronize'
+        "name", nargs="*", metavar="name", help="the certificates to synchronize"
     )
     sync.set_defaults(func=synchronize)
     return parser.parse_args()

@@ -7,12 +7,12 @@ from sys import stderr
 from typing import Iterable, Union
 
 
-__all__ = ['get_easyrsa_cmd', 'get_rsync_cmd', 'print_cpr']
+__all__ = ["get_easyrsa_cmd", "get_rsync_cmd", "print_cpr"]
 
 
-EASYRSA = '/usr/bin/easyrsa'
-COMMAND = 'build-client-full'
-NOPASS = 'nopass'
+EASYRSA = "/usr/bin/easyrsa"
+COMMAND = "build-client-full"
+NOPASS = "nopass"
 
 
 def print_cpr(called_process_error: CalledProcessError, stdout: bool = True):
@@ -36,24 +36,24 @@ def get_ssh_cmd(identity: Union[Path, str]) -> list[str]:
     """Returns the command for SSH."""
 
     return [
-        f'/usr/bin/ssh {identity}',
-        '-o',
-        'UserKnownHostsFile=/dev/null',
-        '-o',
-        'StrictHostKeyChecking=no '
-        '-o ConnectTimeout=5'
+        f"/usr/bin/ssh {identity}",
+        "-o",
+        "UserKnownHostsFile=/dev/null",
+        "-o",
+        "StrictHostKeyChecking=no " "-o ConnectTimeout=5",
     ]
 
 
-def get_rsync_cmd(identity: Union[Path, str], files: Iterable[Path],
-                  user: str, host: str, path: Path) -> list[str]:
+def get_rsync_cmd(
+    identity: Union[Path, str], files: Iterable[Path], user: str, host: str, path: Path
+) -> list[str]:
     """Returns the command for rsync."""
 
     return [
-        '/usr/bin/rsync',
-        '-auvce',
-        ' '.join(get_ssh_cmd(identity)),
-        '--chmod=F640',
+        "/usr/bin/rsync",
+        "-auvce",
+        " ".join(get_ssh_cmd(identity)),
+        "--chmod=F640",
         *(str(file) for file in files),
-        f'{user}@{host}:{path}'
+        f"{user}@{host}:{path}",
     ]

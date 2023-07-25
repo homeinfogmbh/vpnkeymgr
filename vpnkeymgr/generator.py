@@ -10,10 +10,10 @@ from vpnkeymgr.functions import get_easyrsa_cmd
 from vpnkeymgr.pki import PKI
 
 
-__all__ = ['Keygen']
+__all__ = ["Keygen"]
 
 
-LOGGER = getLogger('vpnkeymgr')
+LOGGER = getLogger("vpnkeymgr")
 
 
 class KeygenResult(NamedTuple):
@@ -30,8 +30,8 @@ class Keygen(PKI):
         """Checks whether we already issued
         a certificate for this common name.
         """
-        keyfile = self.keys_dir / f'{name}.key'
-        crtfile = self.certs_dir / f'{name}.crt'
+        keyfile = self.keys_dir / f"{name}.key"
+        crtfile = self.certs_dir / f"{name}.crt"
         return keyfile.exists() or crtfile.exists()
 
     def genkey(self, name: Optional[str] = None) -> KeygenResult:

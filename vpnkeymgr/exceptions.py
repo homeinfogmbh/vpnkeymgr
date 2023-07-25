@@ -3,7 +3,7 @@
 from subprocess import CalledProcessError
 
 
-__all__ = ['CalledProcessErrors', 'CommonNameExists']
+__all__ = ["CalledProcessErrors", "CommonNameExists"]
 
 
 class CalledProcessErrors(Exception):
